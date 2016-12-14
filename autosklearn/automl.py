@@ -3,7 +3,7 @@ from __future__ import print_function
 
 from collections import defaultdict
 import hashlib
-import io
+import StringIO as io
 import os
 
 
@@ -107,7 +107,7 @@ class AutoML(BaseEstimator):
 
     def start_automl(self, parser):
         self._parser = parser
-        self.start()
+        self.run()
 
     def start(self):
         if self._parser is None:
@@ -324,6 +324,7 @@ class AutoML(BaseEstimator):
         #  densifier and truncatedSVD would probably lead to a MemoryError,
         # like this we can't use some of the preprocessing methods in case
         # the data became sparse)
+        # import ipdb;ipdb.set_trace()
         self.configuration_space, configspace_path = self._create_search_space(
             self._backend.temporary_directory,
             self._backend,
