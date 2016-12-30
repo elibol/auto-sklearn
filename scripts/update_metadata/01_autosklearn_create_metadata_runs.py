@@ -66,6 +66,8 @@ if __name__ == '__main__':
                 os.makedirs(output_directory)
             except:
                 pass
+            # '-e lda xgradient_boosting qda extra_trees decision_tree gradient_boosting k_nearest_neighbors multinomial_nb libsvm_svc gaussian_nb random_forest bernoulli_nb ' \
+            # '-p polynomial pca ' \
             command = 'autosklearn --output-dir %s ' \
                       '--temporary-output-directory %s ' \
                       '--seed %d ' \
