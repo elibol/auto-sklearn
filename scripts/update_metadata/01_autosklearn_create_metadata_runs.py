@@ -16,6 +16,26 @@ if __name__ == '__main__':
                         help="Time limit for an individual run.")
     parser.add_argument("--ml-memory-limit", type=int, required=True,
                         help="Memory limit for the target algorith run.")
+    parser.add_argument('--resampling-strategy',
+                        type=str,
+                        default="partial-cv",
+                        help='Resampling strategy.',
+                        choices=['holdout', 'holdout-iterative-fit', 'cv', 'nested-cv', 'partial-cv'])
+    parser.add_argument("--data-format", type=str, default="automl-competition-format",
+                        help="format of data.",
+                        choices=["automl-competition-format", "arff"])
+    parser.add_argument("--metric", type=str, required=False, default="acc",
+                        help="Metric to use.")
+    parser.add_argument('-e', '--include-estimators',
+                        nargs='*',
+                        default=None,
+                        type=str,
+                        help='Only use these estimators inside auto-sklearn')
+    parser.add_argument('-p', '--include-preprocessors',
+                        nargs='*',
+                        default=None,
+                        type=str,
+                        help='Only use these preprocessors inside auto-sklearn')
     args = parser.parse_args()
 
     datasets_dir = os.path.abspath(os.path.dirname(args.datasets))
@@ -29,11 +49,14 @@ if __name__ == '__main__':
     commands = []
     for num_run in range(args.runs_per_dataset):
         for dataset in datasets:
-            print dataset
-            with open(dataset + "/info.json") as fh:
-                info = json.load(fh)
-            target = info['target']
-            task = info['task']
+            if args.data_format == 'arff':
+                # load target and task data from info.json
+                # e.g. {'target': 'y', 'task': 'binary.classification'}
+                # TODO: these can be inferred from openml datasets
+                with open(dataset + "/info.json") as fh:
+                    info = json.load(fh)
+                target = info['target']
+                task = info['task']
             
             if dataset[-1] == "/":
                 dataset = dataset[:-1]
@@ -45,24 +68,34 @@ if __name__ == '__main__':
                 pass
             command = 'autosklearn --output-dir %s ' \
                       '--temporary-output-directory %s ' \
-                      '--seed %d --time-limit %d --per-run-time-limit %d ' \
+                      '--seed %d ' \
+                      '--time-limit %d ' \
+                      '--per-run-time-limit %d ' \
                       '--ml-memory-limit %d ' \
-                      '--resampling-strategy holdout ' \
-                      '--ensemble-size 0 ' \
+                      '--ensemble-size 1 ' \
                       '--metalearning-configurations 0 ' \
-                      '--data-format arff ' \
-                      '--metric auc ' \
-                      '-e lda xgradient_boosting qda extra_trees decision_tree gradient_boosting k_nearest_neighbors multinomial_nb libsvm_svc gaussian_nb random_forest bernoulli_nb ' \
-                      '-p polynomial pca ' \
                       '--target %s ' \
                       '--task %s ' \
-                      '--dataset %s' % (output_directory,
-                                        output_directory,
-                                        num_run * 1000,
-                                        args.time_limit,
-                                        args.per_run_time_limit,
-                                        args.ml_memory_limit,
-                                        target, task, dataset)
+                      '--dataset %s' \
+                      '--resampling-strategy %s ' \
+                      '--data-format %s ' \
+                      '--metric %s ' \
+                      '-e %s ' \
+                      '-p %s ' \
+                      % (output_directory,
+                         output_directory,
+                         num_run * 1000,
+                         args.time_limit,
+                         args.per_run_time_limit,
+                         args.ml_memory_limit,
+                         target,
+                         task,
+                         dataset,
+                         args.resampling_strategy,
+                         args.data_format,
+                         args.metric,
+                         args.include_estimators,
+                         args.include_preprocessors,)
             commands.append(command)
 
     commands_file = os.path.join(args.output_directory, 'commands.txt')
