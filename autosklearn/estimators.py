@@ -329,7 +329,7 @@ class AutoSklearnClassifier(AutoSklearnEstimator):
         self
 
         """
-        return super(AutoSklearnClassifier, self).fit(X, y, metric, feat_type, dataset_name, miro_extra=miro_extra)
+        return super(AutoSklearnClassifier, self).fit(miro_extra, X, y, metric, feat_type, dataset_name)
 
     def predict(self, X):
         """Predict classes for X.
