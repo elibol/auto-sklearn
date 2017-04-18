@@ -295,7 +295,8 @@ class AutoSklearnClassifier(AutoSklearnEstimator):
     def fit(self, X, y,
             metric='acc_metric',
             feat_type=None,
-            dataset_name=None):
+            dataset_name=None,
+            miro_extra=None,):
         """Fit *auto-sklearn* to given training set (X, y).
 
         Parameters
@@ -328,7 +329,7 @@ class AutoSklearnClassifier(AutoSklearnEstimator):
         self
 
         """
-        return super(AutoSklearnClassifier, self).fit(X, y, metric, feat_type, dataset_name)
+        return super(AutoSklearnClassifier, self).fit(X, y, metric, feat_type, dataset_name, miro_extra=miro_extra)
 
     def predict(self, X):
         """Predict classes for X.
