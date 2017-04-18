@@ -202,17 +202,19 @@ class AbstractEvaluator(object):
         ############
         try:
             import json
-            miro_extra = self.D.miro_extra
+            miro_extra = self.D.info['miro_extra']
             filename = miro_extra['working_dir'] + "/askl_iter_results_%s_%d.json" % (miro_extra['did'], self.num_run)
             y_pred = self.model.predict(miro_extra['X_test'])
             y_test = miro_extra['y_test']
             with open(filename, "w") as fh:
                 json.dump({
-                    'y_test': y_test,
-                    'y_pred': y_pred,
+                    'y_test': y_test.tolist(),
+                    'y_pred': y_pred.tolist(),
                 }, fh)
+            # print("MIRO WRITTEN FOR %d" % self.num_run)
         except Exception as e:
-            print "NO MIRO FOR %d" % self.num_run
+            print("NO MIRO FOR %d" % self.num_run)
+            # print(e)
 
         ############
         # MIRO END

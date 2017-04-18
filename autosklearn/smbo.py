@@ -276,6 +276,9 @@ class AutoMLSMBO(object):
         self.metric = self.datamanager.info['metric']
         self.task = self.datamanager.info['task']
         
+        self.datamanager.info['miro_extra'] = self.miro_extra
+        # print('miro_extra_set', self.datamanager.info['miro_extra']['did'])
+        
     def collect_additional_subset_defaults(self):
         default_configs = []
         # == set default configurations
@@ -529,13 +532,12 @@ class AutoMLSMBO(object):
     def run_smbo(self, max_iters=1000):
         global evaluator
 
-        max_iters = 200
+        max_iters = 210
 
         self.watcher.start_task('SMBO')
 
         # == first things first: load the datamanager
         self.reset_data_manager()
-        self.datamanager.miro_extra = self.miro_extra
 
         # == Initialize SMBO stuff
         # first create a scenario
