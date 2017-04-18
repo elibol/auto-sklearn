@@ -529,6 +529,8 @@ class AutoMLSMBO(object):
     def run_smbo(self, max_iters=1000):
         global evaluator
 
+        max_iters = 200
+
         self.watcher.start_task('SMBO')
 
         # == first things first: load the datamanager
@@ -987,7 +989,9 @@ class AutoMLSMBO(object):
                 time_used_this_iteration = time.time() - start_time_this_iteration
 
                 if max_iters is not None:
-                    finished = (smac_iter >= max_iters)
+                    # finished = (smac_iter >= max_iters)
+                    finished = (num_run >= max_iters)
+                    self.total_walltime_limit = 0
 
                 if self.watcher.wall_elapsed(
                         'SMBO') > self.total_walltime_limit:
