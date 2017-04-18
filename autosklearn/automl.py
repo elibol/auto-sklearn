@@ -104,6 +104,7 @@ class AutoML(BaseEstimator):
 
         # After assignging and checking variables...
         #self._backend = Backend(self._output_dir, self._tmp_dir)
+        self.miro_extra = None
 
     def start_automl(self, parser):
         self._parser = parser
@@ -403,6 +404,7 @@ class AutoML(BaseEstimator):
                                          resampling_strategy_args=self._resampling_strategy_arguments,
                                          acquisition_function=self.acquisition_function,
                                          shared_mode=self._shared_mode)
+            self._proc_smac.miro_extra = self.miro_extra
             self._proc_smac.run_smbo()
 
         self._proc_ensemble = None

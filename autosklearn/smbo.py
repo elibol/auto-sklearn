@@ -255,6 +255,7 @@ class AutoMLSMBO(object):
                                      ":" + dataset_name if dataset_name is
                                                            not None else "")
         self.logger = get_logger(logger_name)
+        self.miro_extra = None
 
     def _send_warnings_to_log(self, message, category, filename, lineno,
                               file=None):
@@ -532,7 +533,8 @@ class AutoMLSMBO(object):
 
         # == first things first: load the datamanager
         self.reset_data_manager()
-        
+        self.datamanager.miro_extra = self.miro_extra
+
         # == Initialize SMBO stuff
         # first create a scenario
         seed = self.seed # TODO

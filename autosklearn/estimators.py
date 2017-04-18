@@ -268,8 +268,9 @@ class AutoSklearnEstimator(AutoMLDecorator, BaseEstimator):
 
         return automl
 
-    def fit(self, *args, **kwargs):
+    def fit(self, miro_extra=None, *args, **kwargs):
         self._automl = self.build_automl()
+        self._automl.miro_extra = miro_extra
         super(AutoSklearnEstimator, self).fit(*args, **kwargs)
 
     def fit_ensemble(self, y, task=None, metric=None, precision='32',

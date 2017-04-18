@@ -197,6 +197,23 @@ class AbstractEvaluator(object):
         We use it as the signal handler so we can recycle the code for the
         normal usecase and when the runsolver kills us here :)"""
 
+        ############
+        # MIRO START
+        ############
+        import json
+        miro_extra = self.D.miro_extra
+        filename = miro_extra['working_dir'] + "/askl_iter_results_%s_%d.json" % (miro_extra['did'], self.num_run)
+        y_pred = self.model.predict(miro_extra['X_test'])
+        y_test = miro_extra['y_test']
+        with open(filename, "w") as fh:
+            json.dump({
+                'y_test': y_test,
+                'y_pred': y_pred,
+            }, fh)
+        ############
+        # MIRO END
+        ############
+
         # try:
         self.duration = time.time() - self.starttime
         if loss is None:
