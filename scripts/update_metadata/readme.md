@@ -3,9 +3,14 @@
 (to be moved to the documentation)
 
 ## 1. configure auto-sklearn on all datasets
-
-    python 01_autosklearn_create_metadata_runs.py --datasets datasets_test.csv
-    --runs-per-dataset 1 --output-directory /tmp/metadata --time-limit 360 --per-run-time-limit 60 --ml-memory-limit 3072
+```
+python 01_autosklearn_create_metadata_runs.py --datasets dataset_list.txt --runs-per-dataset 1 --output-directory /tmp/metadata --time-limit 360 --per-run-time-limit 30 --ml-memory-limit 16000 \
+--resampling-strategy holdout \
+--data-format arff \
+--metric auc \
+-e lda xgradient_boosting qda extra_trees decision_tree gradient_boosting k_nearest_neighbors multinomial_nb libsvm_svc gaussian_nb random_forest bernoulli_nb \
+-p polynomial pca
+```
 
 ## 2. get the test performance of these configurations
 

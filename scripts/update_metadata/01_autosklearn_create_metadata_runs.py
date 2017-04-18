@@ -47,6 +47,8 @@ if __name__ == '__main__':
             datasets.append(dataset)
 
     commands = []
+    target = None
+    task = None
     for num_run in range(args.runs_per_dataset):
         for dataset in datasets:
             if args.data_format == 'arff':
