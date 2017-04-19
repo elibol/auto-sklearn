@@ -210,6 +210,7 @@ class AbstractEvaluator(object):
                 json.dump({
                     'y_test': y_test.tolist(),
                     'y_pred': y_pred.tolist(),
+                    'num_classes': miro_extra.get('num_classes', None),
                 }, fh)
             # print("MIRO WRITTEN FOR %d" % self.num_run)
         except Exception as e:
