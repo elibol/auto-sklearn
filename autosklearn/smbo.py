@@ -991,9 +991,7 @@ class AutoMLSMBO(object):
                 time_used_this_iteration = time.time() - start_time_this_iteration
 
                 if max_iters is not None:
-                    # finished = (smac_iter >= max_iters)
-                    finished = (num_run >= max_iters)
-                    self.total_walltime_limit = 0
+                    finished = (smac_iter >= max_iters)
 
                 if self.watcher.wall_elapsed(
                         'SMBO') > self.total_walltime_limit:
