@@ -206,8 +206,10 @@ class AbstractEvaluator(object):
             filename = miro_extra['working_dir'] + "/askl_iter_results_%s_%d.json" % (miro_extra['did'], self.num_run)
             y_pred = self.model.predict(miro_extra['X_test'])
             y_test = miro_extra['y_test']
-            y_val = self.D.data.get('X_valid')
-            y_pred_val = self.model.predict(y_val)
+            y_pred_val = self.model.predict(self.X_optimization)
+            y_val = self.Y_optimization
+            # make sure the split makes sense...
+            assert self.X_optimization.shape[0] + self.X_train.shape[0] + y_test.shape[0] == miro_extra['num_data']
             with open(filename, "w") as fh:
                 json.dump({
                     'y_test': y_test.tolist(),
