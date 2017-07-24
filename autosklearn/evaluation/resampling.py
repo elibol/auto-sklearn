@@ -45,7 +45,7 @@ def split_data(X, Y, classification=None):
             sss = sklearn.cross_validation.StratifiedShuffleSplit(
                 Y,
                 n_iter=1,
-                test_size=0.33,
+                test_size=0.10,
                 train_size=None,
                 random_state=42)
         except ValueError:
@@ -56,7 +56,7 @@ def split_data(X, Y, classification=None):
     if sss is None:
         sss = sklearn.cross_validation.ShuffleSplit(Y.shape[0],
                                                     n_iter=1,
-                                                    test_size=0.33,
+                                                    test_size=0.10,
                                                     train_size=None,
                                                     random_state=42)
 

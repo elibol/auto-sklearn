@@ -206,10 +206,14 @@ class AbstractEvaluator(object):
             filename = miro_extra['working_dir'] + "/askl_iter_results_%s_%d.json" % (miro_extra['did'], self.num_run)
             y_pred = self.model.predict(miro_extra['X_test'])
             y_test = miro_extra['y_test']
+            y_val = self.D.data.get('X_valid')
+            y_pred_val = self.model.predict(y_val)
             with open(filename, "w") as fh:
                 json.dump({
                     'y_test': y_test.tolist(),
                     'y_pred': y_pred.tolist(),
+                    'y_pred_val': y_pred_val.tolist(),
+                    'y_val': y_val.tolist(),
                     'num_classes': miro_extra.get('num_classes', None),
                 }, fh)
             # print("MIRO WRITTEN FOR %d" % self.num_run)
