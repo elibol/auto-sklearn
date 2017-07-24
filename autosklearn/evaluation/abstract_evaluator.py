@@ -219,7 +219,7 @@ class AbstractEvaluator(object):
             # print("MIRO WRITTEN FOR %d" % self.num_run)
         except Exception as e:
             print("NO MIRO FOR %d" % self.num_run)
-            # print(e)
+            print(e)
 
         ############
         # MIRO END
