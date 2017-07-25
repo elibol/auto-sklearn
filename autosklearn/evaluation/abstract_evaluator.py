@@ -201,6 +201,7 @@ class AbstractEvaluator(object):
         # MIRO START
         ############
         try:
+            from autosklearn.metrics.classification_metrics import acc_metric
             import json
             miro_extra = self.D.info['miro_extra']
             filename = miro_extra['working_dir'] + "/askl_iter_results_%s_%d.json" % (miro_extra['did'], self.num_run)
@@ -215,6 +216,7 @@ class AbstractEvaluator(object):
                     'y_test': y_test.tolist(),
                     'y_pred': y_pred.tolist(),
                     'y_pred_val': y_pred_val.tolist(),
+                    'y_pred_val_theirs': acc_metric(y_val, y_pred_val),
                     'y_val': y_val.tolist(),
                     'num_classes': miro_extra.get('num_classes', None),
                 }, fh)
