@@ -201,7 +201,6 @@ class AbstractEvaluator(object):
         # MIRO START
         ############
         try:
-            from autosklearn.metrics.classification_metrics import acc_metric
             import json
             miro_extra = self.D.info['miro_extra']
             filename = miro_extra['working_dir'] + "/askl_iter_results_%s_%d.json" % (miro_extra['did'], self.num_run)
@@ -209,14 +208,15 @@ class AbstractEvaluator(object):
             y_test = miro_extra['y_test']
             y_pred_val = self.model.predict(self.X_optimization)
             y_val = self.Y_optimization
-            # make sure the split makes sense...
+            print(self.metric, self.task_type)
+            # makes sense?
+            assert self.D.info['label_num'] == miro_extra.get('num_classes')
             assert self.X_optimization.shape[0] + self.X_train.shape[0] + y_test.shape[0] == miro_extra['num_data']
             with open(filename, "w") as fh:
                 json.dump({
                     'y_test': y_test.tolist(),
                     'y_pred': y_pred.tolist(),
                     'y_pred_val': y_pred_val.tolist(),
-                    'y_pred_val_theirs': acc_metric(y_val, y_pred_val),
                     'y_val': y_val.tolist(),
                     'num_classes': miro_extra.get('num_classes', None),
                 }, fh)
