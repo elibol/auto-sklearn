@@ -38,9 +38,7 @@ class HoldoutEvaluator(AbstractEvaluator):
 
         classification = datamanager.info['task'] in CLASSIFICATION_TASKS
         self.X_train, self.X_optimization, self.Y_train, self.Y_optimization = \
-            split_data(datamanager.data['X_train'],
-                       datamanager.data['Y_train'],
-                       classification=classification)
+            split_data(datamanager=datamanager, classification=classification)
 
     def fit_predict_and_loss(self):
         num_train_points = self.X_train.shape[0]

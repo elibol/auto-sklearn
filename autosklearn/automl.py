@@ -300,9 +300,7 @@ class AutoML(BaseEstimator):
         # == Pickle the data manager to speed up loading
         data_manager_path = self._backend.save_datamanager(datamanager)
 
-        self._save_ensemble_data(
-            datamanager.data['X_train'],
-            datamanager.data['Y_train'])
+        self._save_ensemble_data(datamanager)
 
         time_for_load_data = self._stopwatch.wall_elapsed(self._dataset_name)
 
@@ -697,7 +695,7 @@ class AutoML(BaseEstimator):
 
         return self.ensemble_.pprint_ensemble_string(self.models_)
 
-    def _save_ensemble_data(self, X, y):
+    def _save_ensemble_data(self, datamanager):
         """Split dataset and store Data for the ensemble script.
 
         :param X:
@@ -707,7 +705,7 @@ class AutoML(BaseEstimator):
         """
         task_name = 'LoadData'
         self._start_task(self._stopwatch, task_name)
-        _, _, _, y_ensemble = resampling.split_data(X, y)
+        _, _, _, y_ensemble = resampling.split_data(datamanager=datamanager)
         self._backend.save_targets_ensemble(y_ensemble)
         self._stop_task(self._stopwatch, task_name)
 

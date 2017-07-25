@@ -13,7 +13,9 @@ __all__ = [
 ]
 
 
-def split_data(X, Y, classification=None):
+def split_data(X=None, Y=None, datamanager=None, classification=None):
+    if X is None and Y is None:
+        X, Y = datamanager.data['X_train'], datamanager.data['Y_train']
     num_data_points = X.shape[0]
     num_labels = Y.shape[1] if len(Y.shape) > 1 else 1
     X_train, X_valid, Y_train, Y_valid = None, None, None, None
