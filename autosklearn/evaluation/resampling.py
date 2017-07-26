@@ -15,7 +15,15 @@ __all__ = [
 
 def split_data(X=None, Y=None, datamanager=None, classification=None):
     if X is None and Y is None:
-        X, Y = datamanager.data['X_train'], datamanager.data['Y_train']
+        # X, Y = datamanager.data['X_train'], datamanager.data['Y_train']
+        miro_extra = datamanager.info.get('miro_extra')
+        X, y = miro_extra['X'], miro_extra['y']
+        train_idx, val_idx, test_idx = miro_extra['idx']
+        X_train, X_val, y_train, y_val = X[train_idx], X[val_idx], y[train_idx], y[val_idx]
+        return X_train, X_val, y_train, y_val
+    else:
+        raise Exception("Strange case encountered (paper version only).")
+
     num_data_points = X.shape[0]
     num_labels = Y.shape[1] if len(Y.shape) > 1 else 1
     X_train, X_valid, Y_train, Y_valid = None, None, None, None

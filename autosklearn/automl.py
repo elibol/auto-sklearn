@@ -182,7 +182,7 @@ class AutoML(BaseEstimator):
                                             feat_type=feat_type,
                                             dataset_name=dataset_name,
                                             encode_labels=False)
-
+        loaded_data_manager.info['miro_extra'] = self.miro_extra
         return self._fit(loaded_data_manager)
 
     def fit_automl_dataset(self, dataset):

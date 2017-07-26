@@ -78,7 +78,8 @@ def eval_with_limits(datamanager, backend, config, seed, num_run,
 
     start_time = time.time()
     queue = multiprocessing.Queue()
-    if datamanager.info['miro_extra'].get('single_proc', False):
+
+    if datamanager.info.get('miro_extra', {}).get('single_proc', False):
         safe_eval = _eval_wrapper
     else:
         safe_eval = pynisher.enforce_limits(mem_in_mb=memory_limit,

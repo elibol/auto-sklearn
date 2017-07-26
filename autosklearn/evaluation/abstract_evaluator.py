@@ -169,6 +169,7 @@ class AbstractEvaluator(object):
         raise NotImplementedError()
 
     def _loss(self, y_true, y_hat):
+        # import ipdb; ipdb.set_trace()
         if not isinstance(self.configuration, Configuration):
             if self.all_scoring_functions:
                 return {self.metric: 1.0}
@@ -202,22 +203,40 @@ class AbstractEvaluator(object):
         ############
         try:
             import json
+            from functools import partial
+            from autosklearn.constants import METRIC_TO_STRING, TASK_TYPES_TO_STRING
+            
+            # import ipdb; ipdb.set_trace()
+            pred_fun = partial(self.predict_function,
+                               model=self.model,
+                               task_type=self.task_type,
+                               Y_train=self.Y_train)
+            # pred_fun = self.model.predict
             miro_extra = self.D.info['miro_extra']
+            X, y = miro_extra['X'], miro_extra['y']
+            train_idx, val_idx, test_idx = miro_extra['idx']
+            X_train, X_val, y_train, y_val = X[train_idx], X[val_idx], y[train_idx], y[val_idx]
+            X_test, y_test = X[test_idx], y[test_idx]
+            assert np.allclose(X_train, self.X_train)
+            assert np.allclose(y_train, self.Y_train)
+            assert np.allclose(X_val, self.X_optimization)
+            assert np.allclose(y_val, self.Y_optimization)
+
             filename = miro_extra['working_dir'] + "/askl_iter_results_%s_%d.json" % (miro_extra['did'], self.num_run)
-            y_pred = self.model.predict(miro_extra['X_test'])
-            y_test = miro_extra['y_test']
-            y_pred_val = self.model.predict(self.X_optimization)
-            y_val = self.Y_optimization
-            print(self.metric, self.task_type)
+            y_test_pred = pred_fun(X_test)
+            y_val_pred = pred_fun(X_val)
+            # print(METRIC_TO_STRING[self.metric], TASK_TYPES_TO_STRING[self.task_type])
+            # print(self.D.info['label_num'], miro_extra.get('num_classes'))
+            # print("val frac", float(self.X_optimization.shape[0])/miro_extra['num_data'])
+            # print("test frac", float(y_test.shape[0])/miro_extra['num_data'])
             # makes sense?
-            assert self.D.info['label_num'] == miro_extra.get('num_classes')
             assert self.X_optimization.shape[0] + self.X_train.shape[0] + y_test.shape[0] == miro_extra['num_data']
             with open(filename, "w") as fh:
                 json.dump({
                     'y_test': y_test.tolist(),
-                    'y_pred': y_pred.tolist(),
-                    'y_pred_val': y_pred_val.tolist(),
+                    'y_test_pred': y_test_pred.tolist(),
                     'y_val': y_val.tolist(),
+                    'y_val_pred': y_val_pred.tolist(),
                     'num_classes': miro_extra.get('num_classes', None),
                 }, fh)
             # print("MIRO WRITTEN FOR %d" % self.num_run)
